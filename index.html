@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finished Calculator</title>
+</head>
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&&family=Tilt+Neon&display=swap");
+
+body {
+  margin: 0;
+}
+div#calculator {
+  width: 65%;
+  height: 75vh;
+  background: #504124;
+  border-radius: 25px;
+  margin: auto auto;
+/*   margin-top: 12.5%; */
+  padding: 10px;
+}
+div.flex {
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+}
+div.parent {
+  margin-top: 15px;
+/*   border: 1px dashed yellow;  */
+  height: 80%;
+  box-sizing:border-box;
+}
+div.p1 {
+  width: 70%;
+  float: left;
+}
+div.p2 {
+  width: 30%;
+  float: right;
+}
+div.p3 {
+  margin-top: 10px;
+  width: 99.6%;
+  height: 15%;
+/*   border: 1px dashed yellow; */
+}
+input#display {
+  border-radius: 10px;
+  font-family: "Inconsolata", monospace;
+  font-size: 2rem;
+  padding-right: 25px;
+  text-align: right;
+  background: #f5cf8e;
+  margin-left: 9px;
+  width: 85%;
+  height: 94%;
+}
+button.number-button {
+  height: 15%;
+  color: white;
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+  font-size: 1.5rem;
+  background: #806443;
+/*   border-radius: 10px; */
+  flex: 0 0 30%;
+  border-bottom: 2.5px solid #F2DAB6;
+  border-right: 2.5px solid #F2DAB6;
+  border-top: 2.5px solid #49341D;
+  border-left: 2.5px solid #49341D;
+}
+button#equal {
+  order: 10;
+  height: 15%;
+  color: white;
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+  font-size: 1.25rem;
+  background: #E1BB80;
+/*   border-radius: 15px; */
+  flex: 0 0 63%;
+  border-bottom: 2.5px solid #F2DAB6;
+  border-right: 2.5px solid #F2DAB6;
+  border-top: 2.5px solid #49341D;
+  border-left: 2.5px solid #49341D;
+}
+button.operation-button {
+  height: 10%;
+  color: white;
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+  font-size: 1.5rem;
+  background: #E1BB80;
+  border-bottom: 2.5px solid #F2DAB6;
+  border-right: 2.5px solid #F2DAB6;
+  border-top: 2.5px solid #7a5731;
+  border-left: 2.5px solid #7a5731;
+/*   border-radius: 15px; */
+  flex: 0 0 70%;
+}
+button:hover {
+  filter: brightness(1.15);
+}
+</style>
+<body>
+
+    <div id="calculator">
+  <div class="p3">
+    <input type="text" id="display" maxLength="10" disabled>
+  </div>
+  <div class="parent p1 flex">
+<!--     <button class="number-buttons" type="button">1</button>
+    <button class="number-buttons" type="button">2</button>
+    <button class="number-buttons" type="button">3</button>
+    <button class="number-buttons" type="button">4</button>
+    <button class="number-buttons" type="button">5</button>
+    <button class="number-buttons" type="button">6</button>
+    <button class="number-buttons" type="button">7</button>
+    <button class="number-buttons" type="button">8</button>
+    <button class="number-buttons" type="button">9</button>
+    <button class="number-buttons" type="button">0</button> -->
+    <button id="equal" type="button">Enter</button>  
+  </div>
+  <div class="parent p2 flex">
+    <button id="clear" class="operation-button" type="button">C</button>
+    <button id="add" class="operation-button" data-value="+" type="button">+</button>
+    <button id="subtract" class="operation-button" data-value="-" type="button">-</button>
+    <button id="multiply" class="operation-button" data-value="*" type="button">*</button>
+    <button id="divide" class="operation-button" data-value="/" type="button">/</button>
+  </div>
+</div>
+    
+
+<script>
+    const calculator = document.getElementById("calculator");
+const resultDisplay = document.getElementById("display");
+const buttons1 = document.querySelector(".p1");
+const clearButton = document.getElementById("clear");
+const equalButton = document.getElementById("equal");
+const addButton = document.getElementById("add");
+const minusButton = document.getElementById("subtract");
+const divideButton = document.getElementById("divide");
+const multiplyButton = document.getElementById("multiply");
+let maxLength = resultDisplay.getAttribute("maxLength");
+resultDisplay.value = "0";
+
+let tempNumber = null;
+let firstNumber = null;
+let secondNumber = null;
+let operation = null;
+let result = null;
+
+for (let i = 0; i < 10; i++) {
+  // console.log("i is " + i)
+  const button = document.createElement("button");
+  button.type = "button";
+  button.classList.add("number-button");
+  button.classList.add("input-button");
+  button.textContent = i;
+  button.setAttribute("data-value", i);
+  console.log(button);
+  if (i === 0) {
+    button.style.order = 1;
+  }
+  buttons1.appendChild(button);
+}
+
+const numberButtons = document.querySelectorAll(".number-button");
+
+// console.log(numberButtons)
+
+numberButtons.forEach((button, index) => {
+  let dataValue = parseInt(button.getAttribute("data-value"));
+  console.log(dataValue);
+
+  button.addEventListener("click", function (event) {
+    if (resultDisplay.value.length < maxLength) {
+      const tempNumber = dataValue;
+      resultDisplay.value += tempNumber;
+    }
+    if (operation === null) {
+      if (firstNumber === null || firstNumber === 0) {
+        firstNumber = dataValue
+      } else {
+        firstNumber = parseInt(firstNumber.toString().concat(dataValue));
+      }
+      resultDisplay.value = firstNumber.toString();
+    } else {
+      if (secondNumber === null || secondNumber === 0) {
+        secondNumber = dataValue;
+      } else {
+        secondNumber = parseInt(secondNumber.toString().concat(dataValue));
+      }
+      resultDisplay.value = secondNumber.toString();
+    }
+  });
+});
+
+function clearValues() {
+  tempNumber = null;
+  firstNumber = null;
+  secondNumber = null;
+  result = null;
+  operation = null;
+  resultDisplay.value = 0;
+}
+
+clearButton.addEventListener("click", function (event) {
+  clearValues();
+  console.log(firstNumber);
+  console.log(tempNumber);
+});
+
+
+const operatorButtons = document.querySelectorAll('.operation-button')
+
+operatorButtons.forEach(button => {
+  // console.log(button)
+  button.addEventListener('click', function(event) {
+    // console.log(event);
+    
+    const thisOperation = event.target.id;
+    console.log(thisOperation)
+    
+    if(firstNumber !== null && secondNumber === null) {
+      switch (thisOperation) {
+        case "add" :
+          operation = "+";
+          break;
+        case "subtract" :
+          operation = "-";
+          break;
+        case "multiply" :
+          operation = "*";
+          break;
+        case "divide" :
+          operation = "/";
+          break;
+      }
+      resultDisplay.value = operation;
+    }
+  })
+});
+
+
+equalButton.addEventListener('click', function(event) {
+  if (secondNumber !== null) {
+    switch (operation) {
+      case "+":
+        result = firstNumber + secondNumber;
+        break;
+      case "-":
+        result = firstNumber - secondNumber;
+        break;
+      case "*":
+        result = firstNumber * secondNumber;
+        break;
+      case "/":
+        result = firstNumber / secondNumber;
+        break;   
+    }
+    resultDisplay.value = result;
+  }
+})
+</script>
+</body>
+</html>
